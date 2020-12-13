@@ -370,5 +370,13 @@
   `(flycheck-info         ((,g (:underline (:style wave :color ,s) ))))
   `(flyspell-incorrect    ((,g (:underline (:style wave :color ,r) )))))
 
+;;;###autoload
+(and load-file-name
+     (boundp 'custom-theme-load-path)
+     (add-to-list 'custom-theme-load-path
+                  (file-name-as-directory
+                   (file-name-directory load-file-name))))
+
+
 (provide-theme 'jc)
 ;;; jc-theme ends here
