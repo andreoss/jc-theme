@@ -10,3 +10,5 @@ Inspired by /(font-lock-mode -1)/
     (load-theme 'jc t)
   )
 #+end_src
+
+[[./.screenshot.png]]
