@@ -2,6 +2,8 @@
 
 Inspired by /(font-lock-mode -1)/
 
+** Installation
+
 #+begin_src emacs-lisp
   (use-package jc-theme
     :straight
@@ -11,4 +13,5 @@ Inspired by /(font-lock-mode -1)/
   )
 #+end_src
 
+** Screenshot
 [[./.screenshot.png]]
