@@ -7,7 +7,7 @@ Inspired by /(font-lock-mode -1)/
 #+begin_src emacs-lisp
   (use-package jc-theme
     :straight
-    '(jc-theme :type git :host gitlab :repo "andreoss/jc-theme")
+    (jc-theme :type git :host gitlab :repo "andreoss/jc-theme")
     :config
     (load-theme 'jc t)
   )
