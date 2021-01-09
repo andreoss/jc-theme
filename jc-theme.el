@@ -358,7 +358,7 @@
    `(org-todo    ((,g (,@bold :foreground ,a))))
    `(org-done    ((,g (,@bold :foreground ,z))))
    `(org-level-1 ((,g (,@bold))))
-
+   `(org-block-background  ((t (:background ,shade-1))))
 
    `(cider-result-overlay-face ((,g (:background  ,m :box (:line-width -1 :style released-button)))
                                 (t (:inverse-video t)))))
@@ -368,7 +368,9 @@
   `(flycheck-error        ((,g (:underline (:style wave :color ,r) ))))
   `(flycheck-warning      ((,g (:underline (:style wave :color ,or)))))
   `(flycheck-info         ((,g (:underline (:style wave :color ,s) ))))
-  `(flyspell-incorrect    ((,g (:underline (:style wave :color ,r) )))))
+  `(flyspell-incorrect    ((,g (:underline (:style wave :color ,r) ))))
+  `(fill-column-indicator ((,g (:foreground ,shade-1))))
+  )
 
 ;;;###autoload
 (and load-file-name
