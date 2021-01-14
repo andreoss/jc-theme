@@ -358,7 +358,7 @@
    `(org-todo    ((,g (,@bold :foreground ,a))))
    `(org-done    ((,g (,@bold :foreground ,z))))
    `(org-level-1 ((,g (,@bold))))
-   `(org-block-background  ((t (:background ,shade-1))))
+   `(org-block   ((t (:background ,shade-1 :extend t))))
 
    `(cider-result-overlay-face ((,g (:background  ,m :box (:line-width -1 :style released-button)))
                                 (t (:inverse-video t)))))
