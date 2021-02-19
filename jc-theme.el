@@ -1,5 +1,10 @@
 ;;; jc-theme --- no colors
 
+;; URL: https://gitlab.com/andreoss/jc-theme
+;; Keywords: theme
+;; Version: 0.1
+;; Package-Requires: ((emacs "26"))
+
 ;; Local Variables:
 ;; no-byte-compile: t
 ;; lexical-binding: t
