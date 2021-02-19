@@ -1,4 +1,4 @@
-;;; jc-theme --- no colors
+;;; jc-theme.el --- no colors
 
 ;; URL: https://gitlab.com/andreoss/jc-theme
 ;; Keywords: theme
