@@ -2,8 +2,8 @@
 
 ;; URL: https://gitlab.com/andreoss/jc-theme
 ;; Keywords: theme
-;; Version: 0.1
-;; Package-Requires: ((emacs "26"))
+;; Version: 0.2
+;; Package-Requires: ((emacs "25"))
 
 ;; Local Variables:
 ;; no-byte-compile: t
