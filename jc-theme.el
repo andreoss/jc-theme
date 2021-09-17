@@ -26,7 +26,15 @@
 (deftheme jc
   "Abolish syntax highlighting.")
 
+(deftheme jc-obscure
+  "Abolish syntax highlighting.")
+
+(deftheme jc-sepia
+  "Abolish syntax highlighting.")
+
 (custom-theme-reset-faces 'jc)
+(custom-theme-reset-faces 'jc-obscure)
+(custom-theme-reset-faces 'jc-sepia)
 
 (defun jc-color-split (color)
   "Return '(R G B) for COLOR."
@@ -55,22 +63,22 @@
          (inv  (mapcar (lambda (a) (- 255 a)) rgb)))
     (apply 'jc-color-make inv)))
 
-(defun jc-color-shade (color &rest grade)
-  "Shade of COLOR."
-  (setq grade (or (car grade) 0.8))
+(defun jc-color-shade (color &optional grade)
+  "Shade of COLOR with GRADE."
+  (setq grade (or grade 0.8))
   (let* ((rgb  (jc-color-split color))
          (inv  (mapcar (lambda (a) (* grade a)) rgb)))
     (apply 'jc-color-make inv)))
 
-(defun jc-color-complement (color &rest grade)
-  "Complement of COLOR."
-  (setq grade (or (car grade) 0.8))
+(defun jc-color-complement (color &optional grade)
+  "Complement of COLOR with GRADE."
+  (setq grade (or grade 0.8))
   (let* ((rgb  (jc-color-split color))
          (inv  (mapcar (lambda (a) (* grade a)) rgb)))
     (jc-color-make (+ 30 (first rgb)) (* 0.95 (second rgb)) (+ 25 (third rgb)))))
 
 (defun jc-rbg-to-cmyk (color)
-  "Convert RGB to CMYK."
+  "Convert RGB COLOR to CMYK."
   (let* (
          (rbg (jc-color-split color))
          (r~ (/ (first rbg) 255.0))
@@ -178,204 +186,211 @@
   :group 'jc-theme
   :type  'color)
 
-(defun ∘ (&rest fs)
+(defun jc--combine (fs)
     "Return function composed of FS."
-  (lexical-let ((lfs fs))
-    (lambda (&rest args)
-      (reduce 'funcall (butlast lfs)
-              :from-end t
-              :initial-value (apply (car (last lfs)) args)))))
+    (lexical-let ((fs! fs))
+      (lambda (&rest args)
+        (reduce 'funcall (butlast fs!)
+                :from-end t
+                :initial-value (apply (car (last fs!)) args)))))
 
-(let* ((f  (∘ 'jc-color-identity))
+(setq jc-color-filter-alist  '(jc-color-inverse))
 
-       ;; Ignore 256-color terminals
-       (g '((class color) (min-colors 257)))
+(defun jc--init (name filters)
+  "Initialise."
+  (let* ((f  (jc--combine (cons 'jc-color-identity filters)) )
+         ;; Ignore 256-color terminals
+         (g '((class color) (min-colors 257)))
 
-       (∅ '((t nil)))
+         (∅ '((t nil)))
 
-       ;; Background
-       (bg (funcall f jc-background-color))
-       ;; Foreground
-       (fg (funcall f jc-foreground-color))
-       ;; Mode line
-       (m  (jc-color-shade jc-background-color))
-       ;; Shade
-       (shade-1  (jc-color-shade jc-background-color 0.95))
-       (shade-2  (jc-color-shade jc-background-color 0.90))
-       (shade-3  (jc-color-shade jc-background-color 0.85))
-       (shade-4  (jc-color-shade jc-background-color 0.80))
-       (shade-5  (jc-color-shade jc-background-color 0.75))
-       (shade-6  (jc-color-shade jc-background-color 0.75))
-       ;; Inactive mode-line text color
-       (i  (jc-color-grayscale m))
-       ;; Scroll bar
-       (k  (jc-color-shade bg))
-       ;; Red
-       (a  jc-red-color)
-       ;; String literals underline color
-       (s  (jc-color-blend jc-green-color jc-background-color 0.1))
-       ;; Green
-       (z  jc-green-color)
-       ;; Region
-       (r (jc-color-shade jc-green-color))
-       ;; Orange
-       (or (jc-color-blend jc-yellow-color jc-red-color 0.7))
+         ;; Background
+         (bg (funcall f jc-background-color))
+         ;; Foreground
+         (fg (funcall f jc-foreground-color))
+         ;; Mode line
+         (m  (jc-color-shade jc-background-color))
+         ;; Shade
+         (shade-1  (jc-color-shade jc-background-color 0.95))
+         (shade-2  (jc-color-shade jc-background-color 0.90))
+         (shade-3  (jc-color-shade jc-background-color 0.85))
+         (shade-4  (jc-color-shade jc-background-color 0.80))
+         (shade-5  (jc-color-shade jc-background-color 0.75))
+         (shade-6  (jc-color-shade jc-background-color 0.75))
+         ;; Inactive mode-line text color
+         (i  (jc-color-grayscale m))
+         ;; Scroll bar
+         (k  (jc-color-shade bg))
+         ;; Red
+         (a  jc-red-color)
+         ;; String literals underline color
+         (s  (jc-color-blend jc-green-color jc-background-color 0.1))
+         ;; Green
+         (z  jc-green-color)
+         ;; Region
+         (r (jc-color-shade jc-green-color))
+         ;; Orange
+         (or (jc-color-blend jc-yellow-color jc-red-color 0.7))
 
-       ;; Links
-       (l1 (jc-color-shade jc-blue-color 0.9))
-       (l2 (jc-color-shade jc-blue-color 0.8))
-       (l3 (jc-color-shade jc-blue-color 0.7))
+         ;; Links
+         (l1 (jc-color-shade jc-blue-color 0.9))
+         (l2 (jc-color-shade jc-blue-color 0.8))
+         (l3 (jc-color-shade jc-blue-color 0.7))
 
-       ;; Hihglight
-       (hl (jc-color-blend jc-background-color (jc-color-shade jc-green-color) 0.6))
+         ;; Hihglight
+         (hl (jc-color-blend jc-background-color (jc-color-shade jc-green-color) 0.6))
 
-       (bold    '(:weight  bold))
-       (default '(:inherit default)))
+         (bold    '(:weight  bold))
+         (default '(:inherit default)))
+    (custom-theme-reset-faces 'jc)
+    (custom-theme-recalc-face 'jc)
+    (custom-theme-set-faces
+     name
+     `(default     ((,g (:background ,bg :foreground ,fg))))
+     `(border      ((,g (:background ,fg))))
 
-  (custom-theme-set-faces
-   'jc
+     `(mode-line   ((,g (:background ,m
+                                     :box (:line-width    -1
+                                                          :color        ,k
+                                                          :style         released-button
+                                                          )
+                                     ))))
 
-   `(default     ((,g (:background ,bg :foreground ,fg))))
-   `(border      ((,g (:background ,fg))))
+     `(mode-line-buffer-id ((t (,@bold))))
+     `(mode-line-emphasis  ((t (,@bold))))
 
-   `(mode-line   ((,g (:background ,m
-                                   :box (:line-width    -1
-                                                        :color        ,k
-                                                        :style         released-button
-                                                        )
-                                   ))))
+     `(mode-line-inactive  ((,g (
+                                 :inherit mode-line
+                                 :background ,bg
+                                 :foreground ,i
+                                 ))
+                            (t (:background "gray" :foreground "#000000"))))
 
-   `(mode-line-buffer-id ((t (,@bold))))
-   `(mode-line-emphasis  ((t (,@bold))))
+     `(header-line  ( (t   (:inherit mode-line))))
+     `(link                ( (,g  (:underline ,l1))))
+     `(link-visited        ( (,g  (:underline ,l2 :inherit link))))
+     `(custom-link         ( (,g  (:underline ,l3 :inherit link))))
+     `(error               ( (,g  (:underline ,a  ,@bold))))
+     `(warning             ( (,g  (:underline ,or ,@bold))))
+     `(success             ( (,g  (:underline ,z  ,@bold))))
+     `(highlight           ( (,g  (:background ,hl
+                                               :foreground ,fg
+                                               ,@bold))))
+     ;; Comments
+     `(font-lock-comment-face ,∅)
 
-   `(mode-line-inactive  ((,g (
-                               :inherit mode-line
-                               :background ,bg
-                               :foreground ,i
-                               ))
-                          (t (:background "gray" :foreground "#000000"))))
+     `(font-lock-comment-delimiter-face
+       ((t (,@bold))))
 
-   `(header-line  ( (t   (:inherit mode-line))))
-   `(link                ( (,g  (:underline ,l1))))
-   `(link-visited        ( (,g  (:underline ,l2 :inherit link))))
-   `(custom-link         ( (,g  (:underline ,l3 :inherit link))))
-   `(error               ( (,g  (:underline ,a  ,@bold))))
-   `(warning             ( (,g  (:underline ,or ,@bold))))
-   `(success             ( (,g  (:underline ,z  ,@bold))))
-   `(highlight           ( (,g  (:background ,hl
-                                             :foreground ,fg
-                                             ,@bold))))
-   ;; Comments
-   `(font-lock-comment-face ,∅)
+     ;; Scroll-bar
+     `(scroll-bar         ((,g  (:background ,bg :foreground ,k ,@default))))
 
-   `(font-lock-comment-delimiter-face
-     ((t (,@bold))))
+     `(minibuffer-prompt  ((t  (,@bold ,@default))))
 
-   ;; Scroll-bar
-   `(scroll-bar         ((,g  (:background ,bg :foreground ,k ,@default))))
+     `(font-lock-builtin-face        ,∅)
+     `(font-lock-constant-face       ,∅)
+     `(font-lock-doc-face            ((t  (:inherit font-lock-comment-face))))
+     `(font-lock-function-name-face  ,∅)
+     `(font-lock-keyword-face        ,∅)
 
-   `(minibuffer-prompt  ((t  (,@bold ,@default))))
+     `(font-lock-negation-char-face  ,∅)
+     `(font-lock-preprocessor-face   ,∅)
 
-   `(font-lock-builtin-face        ,∅)
-   `(font-lock-constant-face       ,∅)
-   `(font-lock-doc-face            ((t  (:inherit font-lock-comment-face))))
-   `(font-lock-function-name-face  ,∅)
-   `(font-lock-keyword-face        ,∅)
+     `(font-lock-regexp-grouping-backslash  ,∅)
+     `(font-lock-regexp-grouping-construct  ,∅)
 
-   `(font-lock-negation-char-face  ,∅)
-   `(font-lock-preprocessor-face   ,∅)
+     `(font-lock-string-face         ((,g  (:underline ,s)) ,@∅))
 
-   `(font-lock-regexp-grouping-backslash  ,∅)
-   `(font-lock-regexp-grouping-construct  ,∅)
+     `(region                         ((,g (:background  ,r))
+                                       (t   (:inverse-video t))))
 
-   `(font-lock-string-face         ((,g  (:underline ,s)) ,@∅))
+     `(font-lock-type-face           ,∅)
+     `(font-lock-variable-name-face  ,∅)
+     `(font-lock-warning-name-face   ((t  (,@bold ))))
 
-   `(region                         ((,g (:background  ,r))
-                                     (t   (:inverse-video t))))
+     `(rainbow-delimiters-depth-1-face ,∅)
+     `(rainbow-delimiters-depth-2-face ,∅)
+     `(rainbow-delimiters-depth-3-face ,∅)
+     `(rainbow-delimiters-depth-4-face ,∅)
+     `(rainbow-delimiters-depth-5-face ,∅)
+     `(rainbow-delimiters-depth-6-face ,∅)
+     `(rainbow-delimiters-depth-7-face ,∅)
+     `(rainbow-delimiters-depth-8-face ,∅)
+     `(rainbow-delimiters-depth-9-face ,∅)
 
-   `(font-lock-type-face           ,∅)
-   `(font-lock-variable-name-face  ,∅)
-   `(font-lock-warning-name-face   ((t  (,@bold ))))
+     ;; Parens matching
+     `(show-paren-match    ((,g (:inherit highlight))
+                            (t  (:inverse-video t))))
 
-   `(rainbow-delimiters-depth-1-face ,∅)
-   `(rainbow-delimiters-depth-2-face ,∅)
-   `(rainbow-delimiters-depth-3-face ,∅)
-   `(rainbow-delimiters-depth-4-face ,∅)
-   `(rainbow-delimiters-depth-5-face ,∅)
-   `(rainbow-delimiters-depth-6-face ,∅)
-   `(rainbow-delimiters-depth-7-face ,∅)
-   `(rainbow-delimiters-depth-8-face ,∅)
-   `(rainbow-delimiters-depth-9-face ,∅)
+     `(show-paren-mismatch ((t (:strike-through t :inherit error))))
 
-   ;; Parens matching
-   `(show-paren-match    ((,g (:inherit highlight))
-                          (t  (:inverse-video t))))
+     `(fringe          ((t (,@default))))
+     `(isearch         ((t (:underline (:color foreground-color :style wave)))))
+     `(lazy-highlight  ((t (:inherit highlight))))
 
-   `(show-paren-mismatch ((t (:strike-through t :inherit error))))
+     ;; Misc
+     `(escape-glyph        ((t (:inherit error))))
+     `(trailing-whitespace ((t (:underline (:inherit error :style wave)))))
 
-   `(fringe          ((t (,@default))))
-   `(isearch         ((t (:underline (:color foreground-color :style wave)))))
-   `(lazy-highlight  ((t (:inherit highlight))))
+     ;; Outline
+     `(outline-1 ,∅)
+     `(outline-2 ,∅)
+     `(outline-3 ,∅)
+     `(outline-4 ,∅)
+     `(outline-5 ,∅)
+     `(outline-6 ,∅)
+     `(outline-7 ,∅)
 
-   ;; Misc
-   `(escape-glyph        ((t (:inherit error))))
-   `(trailing-whitespace ((t (:underline (:inherit error :style wave)))))
+     ;; Dired
+     `(dired-subtree-depth-1-face   ((t (:background ,shade-1))))
+     `(dired-subtree-depth-2-face   ((t (:background ,shade-2))))
+     `(dired-subtree-depth-3-face   ((t (:background ,shade-3))))
+     `(dired-subtree-depth-4-face   ((t (:background ,shade-4))))
+     `(dired-subtree-depth-5-face   ((t (:background ,shade-5))))
+     `(dired-subtree-depth-6-face   ((t (:background ,shade-6))))
 
-   ;; Outline
-   `(outline-1 ,∅)
-   `(outline-2 ,∅)
-   `(outline-3 ,∅)
-   `(outline-4 ,∅)
-   `(outline-5 ,∅)
-   `(outline-6 ,∅)
-   `(outline-7 ,∅)
+     `(cperl-array-face           ,∅)
+     `(cperl-hash-face            ,∅)
+     `(cperl-nonoverridable-face  ,∅)
 
-   ;; Dired
-   `(dired-subtree-depth-1-face   ((t (:background ,shade-1))))
-   `(dired-subtree-depth-2-face   ((t (:background ,shade-2))))
-   `(dired-subtree-depth-3-face   ((t (:background ,shade-3))))
-   `(dired-subtree-depth-4-face   ((t (:background ,shade-4))))
-   `(dired-subtree-depth-5-face   ((t (:background ,shade-5))))
-   `(dired-subtree-depth-6-face   ((t (:background ,shade-6))))
+     `(fixed-pitch        ,∅)
+     `(fixed-pitch-serif  ,∅)
+     `(variable-pitch     ,∅)
 
-   `(cperl-array-face           ,∅)
-   `(cperl-hash-face            ,∅)
-   `(cperl-nonoverridable-face  ,∅)
+     `(eshell-prompt         ,∅)
+     `(eshell-ls-executable  ,∅)
+     `(eshell-ls-backup      ,∅)
+     `(eshell-ls-directory   ,∅)
+     `(eshell-ls-archive     ,∅)
+     `(eshell-ls-product     ,∅)
+     `(eshell-ls-symlink     ,∅)
+     `(eshell-ls-clutter     ,∅)
+     `(eshell-ls-unreadable  ,∅)
+     `(eshell-ls-missing     ,∅)
+     `(eshell-ls-special     ,∅)
 
-   `(fixed-pitch        ,∅)
-   `(fixed-pitch-serif  ,∅)
-   `(variable-pitch     ,∅)
+     `(highlight-changes     ((t (:inherit highlight))))
 
-   `(eshell-prompt         ,∅)
-   `(eshell-ls-executable  ,∅)
-   `(eshell-ls-backup      ,∅)
-   `(eshell-ls-directory   ,∅)
-   `(eshell-ls-archive     ,∅)
-   `(eshell-ls-product     ,∅)
-   `(eshell-ls-symlink     ,∅)
-   `(eshell-ls-clutter     ,∅)
-   `(eshell-ls-unreadable  ,∅)
-   `(eshell-ls-missing     ,∅)
-   `(eshell-ls-special     ,∅)
+     `(org-todo    ((,g (,@bold :foreground ,a))))
+     `(org-done    ((,g (,@bold :foreground ,z))))
+     `(org-level-1 ((,g (,@bold))))
+     `(org-block   ((,g (:background ,shade-1 :extend t))))
 
-   `(highlight-changes     ((t (:inherit highlight))))
+     `(cider-result-overlay-face ((,g (:background  ,m :box (:line-width -1 :style released-button)))
+                                  (t (:inverse-video t)))))
 
-   `(org-todo    ((,g (,@bold :foreground ,a))))
-   `(org-done    ((,g (,@bold :foreground ,z))))
-   `(org-level-1 ((,g (,@bold))))
-   `(org-block   ((,g (:background ,shade-1 :extend t))))
+    `(sh-quoted-exec ,∅)
 
-   `(cider-result-overlay-face ((,g (:background  ,m :box (:line-width -1 :style released-button)))
-                                (t (:inverse-video t)))))
+    `(flycheck-error        ((,g (:underline (:style wave :color ,r) ))))
+    `(flycheck-warning      ((,g (:underline (:style wave :color ,or)))))
+    `(flycheck-info         ((,g (:underline (:style wave :color ,s) ))))
+    `(flyspell-incorrect    ((,g (:underline (:style wave :color ,r) ))))
+    `(fill-column-indicator ((,g (:foreground ,shade-1))))
+    ))
 
-  `(sh-quoted-exec ,∅)
-
-  `(flycheck-error        ((,g (:underline (:style wave :color ,r) ))))
-  `(flycheck-warning      ((,g (:underline (:style wave :color ,or)))))
-  `(flycheck-info         ((,g (:underline (:style wave :color ,s) ))))
-  `(flyspell-incorrect    ((,g (:underline (:style wave :color ,r) ))))
-  `(fill-column-indicator ((,g (:foreground ,shade-1))))
-  )
+(jc--init 'jc '())
+(jc--init 'jc-obscure '(jc-color-inverse))
+(jc--init 'jc-sepia   '(jc-color-sepia))
 
 ;;;###autoload
 (and load-file-name
