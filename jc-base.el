@@ -54,7 +54,8 @@
   "Shade of COLOR with GRADE."
   (setq grade (or grade 0.8))
   (let* ((rgb  (jc-color-split color))
-         (inv  (mapcar (lambda (a) (* grade a)) rgb)))
+         (mul  (if (> 0.5 (jc-color-luminance color)) (+ 1.0 grade) grade))
+         (inv  (mapcar (lambda (a) (* mul a)) rgb)))
     (apply 'jc-color-make inv)))
 
 (defun jc-color-complement (color &optional grade)
