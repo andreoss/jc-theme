@@ -196,14 +196,14 @@
          ;; Foreground
          (fg (funcall f jc-foreground-color))
          ;; Mode line
-         (m  (jc-color-shade ,bg))
+         (m  (jc-color-shade bg))
          ;; Shade
-         (shade-1  (jc-color-shade ,bg 0.95))
-         (shade-2  (jc-color-shade ,bg 0.90))
-         (shade-3  (jc-color-shade ,bg 0.85))
-         (shade-4  (jc-color-shade ,bg 0.80))
-         (shade-5  (jc-color-shade ,bg 0.75))
-         (shade-6  (jc-color-shade ,bg 0.75))
+         (shade-1  (jc-color-shade bg 0.95))
+         (shade-2  (jc-color-shade bg 0.90))
+         (shade-3  (jc-color-shade bg 0.85))
+         (shade-4  (jc-color-shade bg 0.80))
+         (shade-5  (jc-color-shade bg 0.75))
+         (shade-6  (jc-color-shade bg 0.75))
          ;; Inactive mode-line text color
          (i  (jc-color-grayscale m))
          ;; Scroll bar
