@@ -226,7 +226,7 @@
          (l3 (jc-color-shade jc-blue-color 0.7))
 
          ;; Hihglight
-         (hl (jc-color-blend jc-background-color (jc-color-shade jc-green-color) 0.6))
+         (hl (jc-color-blend bg (jc-color-shade jc-green-color) 0.6))
 
          (bold    '(:weight  bold))
          (default '(:inherit default)))

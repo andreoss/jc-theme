@@ -14,8 +14,8 @@
 ;;; Commentary:
 ;;; (eval-buffer)
 ;;; (un-require 'jc)
-;;; (enable-theme  'jc)
-;;; (disable-theme 'jc)
+;;; (enable-theme  'jc-obscure)
+;;; (disable-theme 'jc-obscure)
 
 ;;; Code:
 
