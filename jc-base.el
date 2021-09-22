@@ -250,9 +250,9 @@
                                  :background ,bg
                                  :foreground ,i
                                  ))
-                            (t (:background "gray" :foreground "#000000"))))
+                            ))
 
-     `(header-line  ( (t   (:inherit mode-line))))
+     `(header-line         ( (t   (:inherit mode-line))))
      `(link                ( (,g  (:underline ,l1))))
      `(link-visited        ( (,g  (:underline ,l2 :inherit link))))
      `(custom-link         ( (,g  (:underline ,l3 :inherit link))))
@@ -375,4 +375,4 @@
     ))
 
 (provide 'jc-base)
-;;; jc-theme ends here
+;;; jc-base.el ends here
