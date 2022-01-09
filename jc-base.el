@@ -136,6 +136,10 @@
   "Identify COLOR."
   (apply 'jc-color-make (jc-color-split color)))
 
+(defun jc-color-equal-p (a b)
+  "Is A the same colour B."
+  (equal (jc-color-identity a) (jc-color-identity b)))
+
 (defgroup jc-theme nil
   "Options for jc-theme"
   :group 'faces)

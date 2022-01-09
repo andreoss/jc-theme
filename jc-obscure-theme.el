@@ -26,8 +26,13 @@
 
 (custom-theme-reset-faces 'jc-obscure)
 
-(jc--init 'jc-obscure '(jc-color-inverse))
+(defun jc-color-obscure (color)
+  "Obscure COLOR."
+  (if (jc-color-equal-p color "#ffffea")
+      "#000000"
+    (jc-color-blend "#331111" (jc-color-inverse color) 0.1)))
 
+(jc--init 'jc-obscure '(jc-color-obscure))
 ;;;###autoload
 (and load-file-name
     (boundp 'custom-theme-load-path)
