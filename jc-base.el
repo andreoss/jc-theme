@@ -252,7 +252,6 @@
                                  ))
                             ))
 
-     `(header-line         ( (t   (:inherit mode-line))))
      `(link                ( (,g  (:underline ,l1))))
      `(link-visited        ( (,g  (:underline ,l2 :inherit link))))
      `(custom-link         ( (,g  (:underline ,l3 :inherit link))))
@@ -375,6 +374,7 @@
     `(header-line           ((,g (:background ,shade-1))))
     `(header-line-highlight ((,g (:background ,shade-3))))
     `(tooltip               ((,g (:background ,shade-1))))
+    `(tool-bar              ((,g (:background ,shade-1))))
     ))
 
 (provide 'jc-base)
