@@ -372,6 +372,9 @@
     `(flycheck-info         ((,g (:underline (:style wave :color ,s) ))))
     `(flyspell-incorrect    ((,g (:underline (:style wave :color ,r) ))))
     `(fill-column-indicator ((,g (:foreground ,shade-1))))
+    `(header-line           ((,g (:background ,shade-1))))
+    `(header-line-highlight ((,g (:background ,shade-3))))
+    `(tooltip               ((,g (:background ,shade-1))))
     ))
 
 (provide 'jc-base)
