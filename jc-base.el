@@ -216,7 +216,7 @@
          ;; Red
          (a  jc-red-color)
          ;; String literals underline color
-         (s  (jc-color-blend jc-green-color jc-background-color 0.1))
+         (s  (funcall f (jc-color-blend jc-green-color jc-background-color 0.1)))
          ;; Green
          (z  jc-green-color)
          ;; Region
