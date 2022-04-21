@@ -30,7 +30,7 @@
   "Obscure COLOR."
   (if (jc-color-equal-p color "#ffffea")
       "#000000"
-    (jc-color-blend "#331111" (jc-color-inverse color) 0.1)))
+    (jc-color-blend "#313438" (jc-color-inverse color) 0.1)))
 
 (jc--init 'jc-obscure '(jc-color-obscure))
 ;;;###autoload
