@@ -22,7 +22,7 @@
 (require 'jc-themes)
 
 (deftheme jc-random
-"Abolish syntax highlighting. Random.")
+"Abolish syntax highlighting.  Random.")
 
 (custom-theme-reset-faces 'jc-random)
 
