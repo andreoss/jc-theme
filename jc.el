@@ -1,4 +1,4 @@
-;;; jc-theme.el --- no colors
+;;; jc.el --- No colors
 
 ;; URL: https://gitlab.com/andreoss/jc-theme
 ;; Keywords: theme
@@ -381,5 +381,6 @@
     `(tool-bar              ((,g (:background ,shade-1))))
     ))
 
-(provide 'jc-base)
-;;; jc-base.el ends here
+(provide 'jc)
+
+;;; jc.el ends here

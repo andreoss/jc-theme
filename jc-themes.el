@@ -1,4 +1,4 @@
-;;; jc-themes.el --- no colors
+;;; jc-themes.el --- No colors
 
 ;; URL: https://gitlab.com/andreoss/jc-theme
 ;; Keywords: theme
@@ -7,7 +7,6 @@
 
 ;; Local Variables:
 ;; no-byte-compile: t
-;; lexical-binding: t
 ;; eval: (rainbow-mode +1)
 ;; End:
 
@@ -19,7 +18,7 @@
 
 ;;; Code:
 
-(require 'jc-base)
+(require 'jc)
 
 ;;;###autoload
 (when (and (boundp 'custom-theme-load-path) load-file-name)
