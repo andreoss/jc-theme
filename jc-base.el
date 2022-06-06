@@ -141,11 +141,11 @@
   (equal (jc-color-identity a) (jc-color-identity b)))
 
 (defgroup jc-theme nil
-  "Options for jc-theme"
+  "Options for jc-theme."
   :group 'faces)
 
 (defface jc-empty '((t nil))
-  "No colors. Default."
+  "No colors.  Default."
   :group 'jc-theme)
 
 (defcustom jc-background-color "#ffffea"
@@ -189,7 +189,7 @@
 (setq jc-color-filter-alist  '(jc-color-inverse))
 
 (defun jc--init (name filters)
-  "Initialise."
+  "Initialise NAME theme with FILTERS."
   (let* ((f  (jc--combine (cons 'jc-color-identity filters)) )
          ;; Ignore 256-color terminals
          (g '((class color) (min-colors 257)))
