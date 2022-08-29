@@ -5,11 +5,11 @@ Inspired by /(font-lock-mode -1)/
 ** Installation
 
 #+begin_src emacs-lisp
-  (use-package jc-theme
+  (use-package jc-themes
     :straight
-    (jc-theme :type git :host gitlab :repo "andreoss/jc-theme")
+    (jc-themes :type git :host gitlab :repo "andreoss/jc-themes")
     :config
-    (load-theme 'jc t)
+    (load-theme 'jc-themes-random t)
   )
 #+end_src
 
