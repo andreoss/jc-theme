@@ -2,7 +2,7 @@
 
 ;; URL: https://gitlab.com/andreoss/jc-theme
 ;; Keywords: faces
-;; Version: 0.2
+;; Version: 0.3
 ;; Package-Requires: ((emacs "25"))
 
 ;;; Commentary:
