@@ -3,6 +3,7 @@
 ;; URL: https://gitlab.com/andreoss/jc-theme
 ;; Keywords: faces
 ;; Version: 0.3
+;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Package-Requires: ((emacs "25"))
 
 ;; Local Variables:
