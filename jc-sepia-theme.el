@@ -1,13 +1,13 @@
-;;; jc-sepia-theme.el --- no colors
+;;; jc-sepia-theme.el --- Sepia
+;; lexical-binding: t
 
 ;; URL: https://gitlab.com/andreoss/jc-theme
-;; Keywords: theme
+;; Keywords: faces
 ;; Version: 0.2
 ;; Package-Requires: ((emacs "25"))
 
 ;; Local Variables:
 ;; no-byte-compile: t
-;; lexical-binding: t
 ;; eval: (rainbow-mode +1)
 ;; End:
 
@@ -34,7 +34,6 @@
     (add-to-list 'custom-theme-load-path
                 (file-name-as-directory
                 (file-name-directory load-file-name))))
-
 
 (provide-theme 'jc-sepia)
 ;;; jc-sepia-theme.el ends here

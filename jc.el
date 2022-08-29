@@ -1,7 +1,7 @@
 ;;; jc.el --- No colors
 
 ;; URL: https://gitlab.com/andreoss/jc-theme
-;; Keywords: theme
+;; Keywords: faces
 ;; Version: 0.2
 ;; Package-Requires: ((emacs "25"))
 
@@ -21,7 +21,7 @@
 
 (eval-when-compile
   (require 'subr-x)
-  (require 'cl))
+  (require 'cl-lib))
 
 (defun jc-color-split (color)
   "Return '(R G B) for COLOR."
@@ -75,10 +75,8 @@
          (k  (- 1 (max r~ b~ g~)))
          (c  (if (= (- 1 k) 0.0) 0.0 (/ (- 1 r~ k) (- 1 k))))
          (m  (if (= (- 1 k) 0.0) 0.0 (/ (- 1 g~ k) (- 1 k))))
-         (y  (if (= (- 1 k) 0.0) 0.0 (/ (- 1 b~ k) (- 1 k))))
-         )
-    (list c m y k))
-  )
+         (y  (if (= (- 1 k) 0.0) 0.0 (/ (- 1 b~ k) (- 1 k)))))
+    (list c m y k)))
 
 (defun jc-cmyk-to-rbg (cmyk)
   "Convert CMYK ot RBG."
@@ -86,11 +84,9 @@
          (c (first cmyk))
          (m (second cmyk))
          (y (third cmyk))
-         (k (fourth cmyk))
-         )
+         (k (fourth cmyk)))
     (jc-color-make
-     (* 255 (- 1 c) (- 1 k)) (* 255 (- 1 m) (- 1 k)) (* 255 (- 1 y) (- 1 k))))
-  )
+     (* 255 (- 1 c) (- 1 k)) (* 255 (- 1 m) (- 1 k)) (* 255 (- 1 y) (- 1 k)))))
 
 (defun jc-color-blend (a b prop)
   "Blend color A with color B with PROP."
@@ -102,8 +98,7 @@
        (apply #'jc-zip (mapcar #'cdr xss)))))
   (let* (
          (a-cmyk (jc-rbg-to-cmyk a))
-         (b-cmyk (jc-rbg-to-cmyk b))
-         )
+         (b-cmyk (jc-rbg-to-cmyk b)))
     (jc-cmyk-to-rbg
      (mapcar
       (lambda (x)
@@ -242,19 +237,14 @@
      `(mode-line   ((,g (:background ,m
                                      :box (:line-width    -1
                                                           :color        ,k
-                                                          :style         released-button
-                                                          )
-                                     ))))
-
+                                                          :style         released-button)))))
      `(mode-line-buffer-id ((t (,@bold))))
      `(mode-line-emphasis  ((t (,@bold))))
 
      `(mode-line-inactive  ((,g (
                                  :inherit mode-line
                                  :background ,bg
-                                 :foreground ,i
-                                 ))
-                            ))
+                                 :foreground ,i))))
 
      `(link                ( (,g  (:underline ,l1))))
      `(link-visited        ( (,g  (:underline ,l2 :inherit link))))
@@ -378,9 +368,7 @@
     `(header-line           ((,g (:background ,shade-1))))
     `(header-line-highlight ((,g (:background ,shade-3))))
     `(tooltip               ((,g (:background ,shade-1))))
-    `(tool-bar              ((,g (:background ,shade-1))))
-    ))
+    `(tool-bar              ((,g (:background ,shade-1))))))
 
 (provide 'jc)
-
 ;;; jc.el ends here

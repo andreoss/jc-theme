@@ -1,7 +1,7 @@
-;;; jc-themes.el --- No colors
+;;; jc-themes.el --- Themes
 
 ;; URL: https://gitlab.com/andreoss/jc-theme
-;; Keywords: theme
+;; Keywords: faces
 ;; Version: 0.2
 ;; Package-Requires: ((emacs "25"))
 

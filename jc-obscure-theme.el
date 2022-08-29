@@ -1,13 +1,13 @@
-;;; jc-obscure-theme.el --- no colors
+;;; jc-obscure-theme.el --- Obscure
+;; lexical-binding: t
 
 ;; URL: https://gitlab.com/andreoss/jc-theme
-;; Keywords: theme
+;; Keywords: faces
 ;; Version: 0.2
 ;; Package-Requires: ((emacs "25"))
 
 ;; Local Variables:
 ;; no-byte-compile: t
-;; lexical-binding: t
 ;; eval: (rainbow-mode +1)
 ;; End:
 

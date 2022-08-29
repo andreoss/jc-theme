@@ -1,13 +1,13 @@
-;;; jc-theme.el --- no colors
+;;; jc-theme.el --- Light
+;; lexical-binding: t
 
 ;; URL: https://gitlab.com/andreoss/jc-theme
-;; Keywords: theme
+;; Keywords: faces
 ;; Version: 0.2
 ;; Package-Requires: ((emacs "25"))
 
 ;; Local Variables:
 ;; no-byte-compile: t
-;; lexical-binding: t
 ;; eval: (rainbow-mode +1)
 ;; End:
 

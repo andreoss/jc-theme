@@ -1,13 +1,13 @@
-;;; jc-random-theme.el --- no colors
+;;; jc-random-theme.el --- Random
+;; lexical-binding: t
 
 ;; URL: https://gitlab.com/andreoss/jc-theme
-;; Keywords: theme
+;; Keywords: faces
 ;; Version: 0.2
 ;; Package-Requires: ((emacs "25"))
 
 ;; Local Variables:
 ;; no-byte-compile: t
-;; lexical-binding: t
 ;; eval: (rainbow-mode +1)
 ;; End:
 
@@ -165,17 +165,14 @@
                   "#FFFF00"
                   "#FFFFE0"
                   "#FFFFF0"
-                  "#FFFFFF"
-                  )
-      )
+                  "#FFFFFF"))
 (setq jc-color-random
       (jc-color-identity
        (nth (mod (random ) (length jc-colors)) jc-colors)))
 
 (defun jc-color-randomish (color)
   "Mix with a COLOR."
-  (jc-color-blend jc-color-random color 0.2)
-  )
+  (jc-color-blend jc-color-random color 0.2))
 
 (jc--init 'jc-random '(jc-color-randomish))
 
@@ -185,7 +182,6 @@
     (add-to-list 'custom-theme-load-path
                 (file-name-as-directory
                 (file-name-directory load-file-name))))
-
 
 (provide-theme 'jc-random)
 ;;; jc-random-theme.el ends here
