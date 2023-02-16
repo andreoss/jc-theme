@@ -210,7 +210,8 @@
 
 (defun jc-themes-colour-bright (colour &optional grade)
   "Complement of COLOUR with GRADE."
-  (jc-themes-colour-blend colour jc-themes-white-colour (or grade 0.60)))
+  (jc-themes-colour-blend
+   colour jc-themes-white-colour (or grade 0.60)))
 
 (defun jc-themes--make-foreground-colour (c)
   "Foreground C."
@@ -230,26 +231,34 @@
 
 (defun jc-themes-git-gutter-colours ()
   "Make git-gutter colours."
-  (let* ((magenta-colour (jc-themes-colour-blend jc-themes-blue-colour jc-themes-red-colour 0.5)))
+  (let* ((magenta-colour
+          (jc-themes-colour-blend
+           jc-themes-blue-colour jc-themes-red-colour 0.5)))
     (list
      (list
       'git-gutter:added
       (jc-themes--make-solid-colour
-       (jc-themes-colour-bright jc-themes-green-colour 0.15)))
+       (jc-themes-colour-blend
+        jc-themes-background-colour jc-themes-green-colour 0.15)))
      (list
       'git-gutter:deleted
       (jc-themes--make-solid-colour
-       (jc-themes-colour-bright jc-themes-red-colour 0.15)
-       ))
+       (jc-themes-colour-blend
+        jc-themes-background-colour jc-themes-red-colour 0.15)))
      (list
       'git-gutter:modified
       (jc-themes--make-solid-colour
-       (jc-themes-colour-bright magenta-colour 0.15))))))
+       (jc-themes-colour-blend
+        jc-themes-background-colour magenta-colour 0.15))))))
 
 (defun jc-themes-ansi-colours ()
   "Make ansi-colours."
-  (let* ((magenta-colour (jc-themes-colour-blend jc-themes-blue-colour jc-themes-red-colour 0.5))
-         (cyan-colour (jc-themes-colour-blend jc-themes-blue-colour jc-themes-green-colour 0.5)))
+  (let* ((magenta-colour
+          (jc-themes-colour-blend
+           jc-themes-blue-colour jc-themes-red-colour 0.5))
+         (cyan-colour
+          (jc-themes-colour-blend
+           jc-themes-blue-colour jc-themes-green-colour 0.5)))
     (list
      (list
       'ansi-color-bright-white
@@ -295,8 +304,7 @@
       (jc-themes--make-solid-colour
        (jc-themes-colour-bright cyan-colour)))
      (list
-      'ansi-color-cyan
-      (jc-themes--make-solid-colour cyan-colour))
+      'ansi-color-cyan (jc-themes--make-solid-colour cyan-colour))
      (list
       'ansi-color-bright-magenta
       (jc-themes--make-solid-colour
