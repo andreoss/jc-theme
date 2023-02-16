@@ -15,10 +15,12 @@
 (deftheme jc-themes-obscure "Abolish syntax highlighting.")
 (defun jc-themes-colour-obscure (colour)
   "Obscure COLOUR."
-  (if (jc-themes-colour-equal-p colour "#FFFFEA")
-      "#000000"
-    (jc-themes-colour-blend
-     "#313438" (jc-themes-colour-inverse colour) 0.1)))
+  (cond
+       ((jc-themes-colour-equal-p colour "#FFFFEA") "#000000")
+       ((jc-themes-colour-equal-p colour (jc-themes-colour-inverse "#FFFFEA")) "#DDDDDD")
+       (t
+        (jc-themes-colour-blend
+         "#313438" (jc-themes-colour-inverse colour) 0.1))))
 (jc-themes--init 'jc-themes-obscure '(jc-themes-colour-obscure))
 (provide-theme 'jc-themes-obscure)
 (provide 'jc-themes-obscure-theme)
