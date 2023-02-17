@@ -18,21 +18,27 @@
 
 (defun jc-themes-colour-split (colour)
   "Return '(R G B) for COLOUR."
-  ;; Not using colour-name-to-rbg because
+  ;; Not using color-name-to-rbg because
   ;; its result depends on the current frame.
   (let* ((c (string-remove-prefix "#" colour))
          (n (string-to-number c 16))
-         (r (/ n (* 256 256)))
-         (g (/ (- n (* r 256 256)) 256))
-         (b (- n (* r 256 256) (* g 256))))
+         (r (/ n (* #x100 #x100)))
+         (g (/ (- n (* r #x100 #x100)) #x100))
+         (b (- n (* r #x100 #x100) (* g #x100))))
     (list r g b)))
+
+(defun jc-themes-colour--sanity (c)
+  "Sanity check, C must be within 00..FF."
+  (if (or (< c #x00) (> c #xFF))
+      (error (format "%02x malformed colour" c))
+    c))
 
 (defun jc-themes-colour-make (r g b)
   "Make string to represent R G B colour."
   (format "#%02x%02x%02x"
-          (abs (floor r))
-          (abs (floor g))
-          (abs (floor b))))
+          (jc-themes-colour--sanity (abs (floor r)))
+          (jc-themes-colour--sanity (abs (floor g)))
+          (jc-themes-colour--sanity (abs (floor b)))))
 
 (defun jc-themes-colour-grayscale (colour)
   "Convert COLOUR to grey-scale."
@@ -43,7 +49,7 @@
 (defun jc-themes-colour-inverse (colour)
   "Inverse COLOUR."
   (let* ((rgb (jc-themes-colour-split colour))
-         (inv (mapcar (lambda (a) (- 255 a)) rgb)))
+         (inv (mapcar (lambda (a) (- #xFF a)) rgb)))
     (apply #'jc-themes-colour-make inv)))
 
 (defun jc-themes-colour-shade (colour &optional grade)
@@ -51,9 +57,9 @@
   (setq grade (or grade 0.8))
   (let* ((rgb (jc-themes-colour-split colour))
          (mul
-          (if (> 0.5 (jc-themes-colour-luminance colour))
-              (+ 1.0 grade)
-            grade))
+          grade
+          ;;(/ (+ (jc-themes-colour-luminance colour) grade) 2)
+          )
          (inv (mapcar (lambda (a) (* mul a)) rgb)))
     (apply #'jc-themes-colour-make inv)))
 
@@ -70,22 +76,22 @@
 (defun jc-themes-rbg-to-cmyk (colour)
   "Convert RGB COLOUR to CMYK."
   (let* ((rbg (jc-themes-colour-split colour))
-         (r~ (/ (cl-first rbg) 255.0))
-         (g~ (/ (cl-second rbg) 255.0))
-         (b~ (/ (cl-third rbg) 255.0))
-         (k (- 1 (max r~ b~ g~)))
+         (rn (/ (cl-first rbg) 255.0))
+         (gn (/ (cl-second rbg) 255.0))
+         (bn (/ (cl-third rbg) 255.0))
+         (k (- 1 (max rn bn gn)))
          (c
           (if (= (- 1 k) 0.0)
               0.0
-            (/ (- 1 r~ k) (- 1 k))))
+            (/ (- 1 rn k) (- 1 k))))
          (m
           (if (= (- 1 k) 0.0)
               0.0
-            (/ (- 1 g~ k) (- 1 k))))
+            (/ (- 1 gn k) (- 1 k))))
          (y
           (if (= (- 1 k) 0.0)
               0.0
-            (/ (- 1 b~ k) (- 1 k)))))
+            (/ (- 1 bn k) (- 1 k)))))
     (list c m y k)))
 
 (defun jc-themes-cmyk-to-rbg (cmyk)
@@ -95,16 +101,17 @@
          (y (cl-third cmyk))
          (k (cl-fourth cmyk)))
     (jc-themes-colour-make
-     (* 255 (- 1 c) (- 1 k))
-     (* 255 (- 1 m) (- 1 k))
-     (* 255 (- 1 y) (- 1 k)))))
+     (* #xFF (- 1 c) (- 1 k))
+     (* #xFF (- 1 m) (- 1 k))
+     (* #xFF (- 1 y) (- 1 k)))))
 
-(defun jc-themes-zip (&rest xss)
+(defun jc-themes--zip (&rest xss)
   "Zip XSS."
   (if (null (car xss))
       '()
     (cons
-     (mapcar #'car xss) (apply #'jc-themes-zip (mapcar #'cdr xss)))))
+     (mapcar #'car xss) (apply #'jc-themes--zip (mapcar #'cdr xss)))))
+
 (defun jc-themes-colour-blend (a b prop)
   "Blend colour A with colour B with PROP."
   (let* ((a-cmyk (jc-themes-rbg-to-cmyk a))
@@ -113,7 +120,14 @@
      (mapcar
       (lambda (x)
         (+ (* prop (cl-first x)) (* (- 1 prop) (cl-second x))))
-      (jc-themes-zip a-cmyk b-cmyk)))))
+      (jc-themes--zip a-cmyk b-cmyk)))))
+
+(jc-themes-colour-blend jc-themes-blue-colour jc-themes-green-colour 0.2)
+"#000000"
+
+(jc-themes-cmyk-to-rbg (jc-themes-rbg-to-cmyk jc-themes-blue-colour))
+
+
 
 (defun jc-themes-colour-sepia (colour)
   "Convert COLOUR to sepia."
@@ -121,7 +135,7 @@
          (r (cl-first rgb))
          (g (cl-second rgb))
          (b (cl-third rgb))
-         (coerce (lambda (c) (min 255 (floor c))))
+         (coerce (lambda (c) (min #xFF (floor c))))
          (adjust
           (lambda (x y z)
             (funcall coerce (+ (* x r) (* y g) (* z b)))))
@@ -139,7 +153,7 @@
          (g~ (* 0.7152 g))
          (b (caddr rgb))
          (b~ (* 0.0722 b))
-         (rbg~ (mapcar (lambda (x) (/ x 255)) (list r~ b~ g~))))
+         (rbg~ (mapcar (lambda (x) (/ x #xFF)) (list r~ b~ g~))))
     (apply #'+ rbg~)))
 
 (defun jc-themes-colour-identity (colour)
@@ -183,7 +197,7 @@
   :group 'jc-themes
   :type 'colour)
 
-(defcustom jc-themes-green-colour "#3C6255"
+(defcustom jc-themes-green-colour "#3C6#x100"
   "Red colour."
   :group 'jc-themes
   :type 'colour)
@@ -229,9 +243,10 @@
   "Solid C."
   (list (list t (list :background c :foreground c))))
 
-(defun jc-themes-git-gutter-colours ()
+(defun jc-themes-git-gutter-colours (background)
   "Make git-gutter colours."
-  (let* ((magenta-colour
+  (let* ((coef (* 0.85 (jc-themes-colour-luminance background)))
+         (magenta-colour
           (jc-themes-colour-blend
            jc-themes-blue-colour jc-themes-red-colour 0.5)))
     (list
@@ -239,17 +254,15 @@
       'git-gutter:added
       (jc-themes--make-solid-colour
        (jc-themes-colour-blend
-        jc-themes-background-colour jc-themes-green-colour 0.15)))
+        background jc-themes-green-colour coef)))
      (list
       'git-gutter:deleted
       (jc-themes--make-solid-colour
-       (jc-themes-colour-blend
-        jc-themes-background-colour jc-themes-red-colour 0.15)))
+       (jc-themes-colour-blend background jc-themes-red-colour coef)))
      (list
       'git-gutter:modified
       (jc-themes--make-solid-colour
-       (jc-themes-colour-blend
-        jc-themes-background-colour magenta-colour 0.15))))))
+       (jc-themes-colour-blend background magenta-colour coef))))))
 
 (defun jc-themes-ansi-colours ()
   "Make ansi-colours."
@@ -318,7 +331,7 @@
   (let* ((f
           (jc-themes--combine
            (cons 'jc-themes-colour-identity transformers)))
-         ;; Ignore 256-colour terminals
+         ;; Ignore #x100-colour terminals
          (g '((class color) (min-colors 257)))
 
          (∅ '((t nil)))
@@ -400,7 +413,7 @@
      for
      x
      in
-     (jc-themes-git-gutter-colours)
+     (jc-themes-git-gutter-colours bg)
      do
      (custom-theme-set-faces name x))
     (custom-theme-set-faces name
@@ -644,9 +657,10 @@
 
          ;; Highlight
          (hl
-          (jc-themes-colour-blend
-           bg
-           (jc-themes-colour-shade jc-themes-green-colour) 0.6))
+          (jc-themes-colour-bright
+           (jc-themes-colour-blend
+            bg
+            (jc-themes-colour-shade jc-themes-green-colour) 0.5))
 
          (bold '(:weight bold))
          (default '(:inherit default)))))

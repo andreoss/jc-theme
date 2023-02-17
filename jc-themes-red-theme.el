@@ -15,11 +15,11 @@
 
 (defun jc-themes-red-colour-blend (colour)
   "Mix with red COLOUR."
-  (if (< (jc-themes-colour-luminance colour) 0.01)
+  (if (< (jc-themes-colour-luminance colour) 0.1)
       colour
-    (jc-themes-colour-blend jc-themes-red-colour colour 0.3)))
+    (jc-themes-colour-blend jc-themes-red-colour colour 0.25)))
 
-(let ((jc-themes-background-colour "#FFFFAA")
+(let ((jc-themes-background-colour "#CF9090")
       (jc-themes-foreground-colour "#000000"))
   (jc-themes--init 'jc-themes-red '(jc-themes-red-colour-blend)))
 (provide-theme 'jc-themes-red)
