@@ -101,9 +101,9 @@
          (y (cl-third cmyk))
          (k (cl-fourth cmyk)))
     (jc-themes-colour-make
-     (* #xFF (- 1 c) (- 1 k))
-     (* #xFF (- 1 m) (- 1 k))
-     (* #xFF (- 1 y) (- 1 k)))))
+     (* #xFF(- 1 c) (- 1 k))
+     (* #xFF(- 1 m) (- 1 k))
+     (* #xFF(- 1 y) (- 1 k)))))
 
 (defun jc-themes--zip (&rest xss)
   "Zip XSS."
@@ -121,13 +121,6 @@
       (lambda (x)
         (+ (* prop (cl-first x)) (* (- 1 prop) (cl-second x))))
       (jc-themes--zip a-cmyk b-cmyk)))))
-
-(jc-themes-colour-blend jc-themes-blue-colour jc-themes-green-colour 0.2)
-"#000000"
-
-(jc-themes-cmyk-to-rbg (jc-themes-rbg-to-cmyk jc-themes-blue-colour))
-
-
 
 (defun jc-themes-colour-sepia (colour)
   "Convert COLOUR to sepia."
@@ -244,7 +237,7 @@
   (list (list t (list :background c :foreground c))))
 
 (defun jc-themes-git-gutter-colours (background)
-  "Make git-gutter colours."
+  "Make git-gutter colours with BACKGROUND."
   (let* ((coef (* 0.85 (jc-themes-colour-luminance background)))
          (magenta-colour
           (jc-themes-colour-blend
@@ -395,10 +388,13 @@
          (l3 (jc-themes-colour-shade jc-themes-blue-colour 0.7))
 
          ;; Highlight
-         (hl
-          (jc-themes-colour-blend
-           bg
-           (jc-themes-colour-shade jc-themes-green-colour) 0.6))
+         (highlight
+          (jc-themes-colour-bright
+           (jc-themes-colour-blend bg jc-themes-blue-colour 0.65)))
+         (highlight-2
+          (jc-themes-colour-bright
+           (jc-themes-colour-blend bg jc-themes-green-colour 0.65)))
+
          (bold '(:weight bold))
          (default '(:inherit default)))
     (custom-theme-reset-faces name)
@@ -463,7 +459,6 @@
      `(error ((,g (:underline ,a ,@bold))))
      `(warning ((,g (:underline ,or ,@bold))))
      `(success ((,g (:underline ,z ,@bold))))
-     `(highlight ((,g (:background ,hl :foreground ,fg ,@bold))))
      ;; Comments
      `(font-lock-comment-face ,∅)
 
@@ -487,7 +482,8 @@
      `(font-lock-regexp-grouping-construct ,∅)
      `(font-lock-string-face ,∅)
 
-     `(region ((,g (:background ,r)) (t (:inverse-video t))))
+     `(highlight ((,g (:background ,highlight :foreground ,fg ,@bold)) (t (:inverse-video t))))
+     `(region    ((,g (:background ,highlight-2)) (t (:inverse-video t))))
 
      `(font-lock-type-face ,∅)
      `(font-lock-variable-name-face ,∅)
@@ -587,84 +583,6 @@
      `(header-line-highlight ((,g (:background ,shade-3))))
      `(tooltip ((,g (:background ,shade-1))))
      `(tool-bar ((,g (:background ,shade-1)))))))
-
-(defun jc-themes--init-faces (name transformers)
-  "Initialise NAME theme with TRANSFORMERS."
-  (let* ((f
-          (jc-themes--combine
-           (cons 'jc-themes-colour-identity transformers)))
-         ;; Ignore 256-colour terminals
-         (g '((class color) (min-colors 257)))
-
-         (∅ '((t nil)))
-
-         ;; Background
-         (bg (funcall f jc-themes-background-colour))
-         ;; Foreground
-         (fg (funcall f jc-themes-foreground-colour))
-         ;; Mode line
-         (m (jc-themes-colour-shade bg))
-         ;; Shade
-         (shade-1
-          (funcall f
-                   (jc-themes-colour-shade jc-themes-background-colour
-                                           0.95)))
-         (shade-2
-          (funcall f
-                   (jc-themes-colour-shade jc-themes-background-colour
-                                           0.85)))
-         (shade-3
-          (funcall f
-                   (jc-themes-colour-shade jc-themes-background-colour
-                                           0.75)))
-         (shade-4
-          (funcall f
-                   (jc-themes-colour-shade jc-themes-background-colour
-                                           0.65)))
-         (shade-5
-          (funcall f
-                   (jc-themes-colour-shade jc-themes-background-colour
-                                           0.55)))
-         (shade-6
-          (funcall f
-                   (jc-themes-colour-shade jc-themes-background-colour
-                                           0.45)))
-         ;; Inactive mode-line text colour
-         (i (jc-themes-colour-grayscale m))
-         ;; Scroll bar
-         (k (jc-themes-colour-shade bg))
-         ;; Red
-         (a jc-themes-red-colour)
-         ;; String literals underline colour
-         (s
-          (funcall f
-                   (jc-themes-colour-blend
-                    jc-themes-green-colour
-                    jc-themes-background-colour
-                    0.1)))
-         ;; Green
-         (z jc-themes-green-colour)
-         ;; Region
-         (r (jc-themes-colour-shade jc-themes-green-colour))
-         ;; Orange
-         (or (jc-themes-colour-blend
-              jc-themes-yellow-colour jc-themes-red-colour 0.7))
-
-         ;; Links
-         (l1 (jc-themes-colour-shade jc-themes-blue-colour 0.9))
-         (l2 (jc-themes-colour-shade jc-themes-blue-colour 0.8))
-         (l3 (jc-themes-colour-shade jc-themes-blue-colour 0.7))
-
-         ;; Highlight
-         (hl
-          (jc-themes-colour-bright
-           (jc-themes-colour-blend
-            bg
-            (jc-themes-colour-shade jc-themes-green-colour) 0.5))
-
-         (bold '(:weight bold))
-         (default '(:inherit default)))))
-
 
 ;;;###autoload
 (when (and (boundp 'custom-theme-load-path) load-file-name)
